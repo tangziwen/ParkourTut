@@ -1,6 +1,6 @@
 #include "MapSequence.h"
 #include <assert.h>
-#include  "cocos2d/external/tinyxml2/tinyxml2.h"
+#include  "../cocos2d/external/tinyxml2/tinyxml2.h"
 using namespace std;
 using namespace tinyxml2; 
 MapSequence::MapSequence(const char* sequence_file):
@@ -14,7 +14,7 @@ MapSequence::MapSequence(const char* sequence_file):
 	{
 		auto left =node->FirstChildElement("Left");
 		auto middle=node->FirstChildElement("Middle");
-		auto right=node->FirstChildElement("Right");
+		auto right=node->FirstChildElement("Right"); 
 		add(atoi (left->GetText()),atoi (middle->GetText()),atoi (right->GetText()));
 		node=node->NextSiblingElement();
 	}
@@ -78,7 +78,7 @@ SequenceInfo MapSequence::pump()
 	else
 	{
 		//error
-		assert(-1,"you've already pumped all infos");
+		assert(-1);
 	}
 }
 

@@ -44,22 +44,21 @@ void PG_Controller::generateTree(Player * player,cocos2d::Node * render_node)
 {
 
 	//left side tree 
-	auto sprite_left =cocos2d::Sprite3D::create("tree.c3b");
-	//sprite_left->setRotation3D(Vec3(-90,0,0));
-	sprite_left->setScale(0.1);
+	auto sprite_left =cocos2d::Sprite3D::create("tree.c3t"); 
+	sprite_left->setScale(0.05);
 	render_node->addChild(sprite_left,10); 
 	auto action = new DecorationAction();
-	sprite_left->setPosition3D(Vec3(-20,0,-250));
+	sprite_left->setPosition3D(Vec3(-30,10,-250));
 	sprite_left->runAction(action);
 	sprite_left->setName("tree");
 
 	//right side tree
-	auto sprite_right =cocos2d::Sprite3D::create("tree.c3b");
+	auto sprite_right =cocos2d::Sprite3D::create("tree.c3t");
 	//sprite_right->setRotation3D(Vec3(-90,0,0));
-	sprite_right->setScale(0.1);
-	render_node->addChild(sprite_right,10);
+	sprite_right->setScale(0.05); 
+	render_node->addChild(sprite_right,10); 
 	auto action_2 = new DecorationAction();
-	sprite_right->setPosition3D(Vec3(20,0,-250));
+	sprite_right->setPosition3D(Vec3(30,10,-250));
 	sprite_right->runAction(action_2);
 	render_node->setCameraMask(2);
 	sprite_right->setName("tree");
