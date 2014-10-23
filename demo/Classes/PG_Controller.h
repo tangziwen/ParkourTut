@@ -9,12 +9,13 @@ class PG_Controller
 public:
 	PG_Controller();
 	~PG_Controller();
-	void randomGenerate(Player * player, cocos2d::Node * render_node);
-	void generateTree(Player * player,cocos2d::Node * render_node);
+	void randomGenerate(Player * player, cocos2d::Node * render_node,float dt);
+	void generateScene(Player * player,cocos2d::Node * render_node);
 	void generateObstacle(Player * player,cocos2d::Node * render_node);
 	void generateCoin(Player * player,cocos2d::Node *render_node);
 	void generateGround(cocos2d::Node * render_node);
 	void insertMapSequence(MapSequence * map_sequence);
+    void preGenerate(cocos2d::Node * render_node);
 private:
 	SequenceInfo pump();
 	void run(float dt);

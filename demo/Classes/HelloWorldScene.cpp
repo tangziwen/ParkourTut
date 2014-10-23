@@ -4,8 +4,10 @@ USING_NS_CC;
 #include <functional>
 #include "PG_Controller.h"
 #include  "CCMoveBy3D.h"
-
 #include "MapSequence.h"
+#include "cocostudio/CCSGUIReader.h"
+
+
 
 
 cocos2d::DrawNode3D * HelloWorld::drawnode=nullptr;
@@ -33,13 +35,12 @@ Scene* HelloWorld::createScene()
 
     // add layer as a child to scene
     
-	 
-
-
 	scene->addChild(layer,100,"game main");
     // return the scene
     return scene;
 }
+
+
 
 // on "init" you need to initialize your instance
 bool HelloWorld::init()
@@ -51,12 +52,12 @@ bool HelloWorld::init()
     {  
         return false;
     }
-	
+	this->gold=0;
 	player =new Player();
 
 	this->addChild(player->getPlayer(),10);
 	
-    player->getPlayer()->setPosition3D(Vec3(0,0,-30));
+    player->getPlayer()->setPosition3D(Vec3(0,0,-40));
 	
 	
 	auto s = Director::getInstance()->getWinSize();
@@ -81,9 +82,14 @@ bool HelloWorld::init()
 
 	_eventDispatcher->addEventListenerWithSceneGraphPriority(touchListener,this);
 
-	schedule(schedule_selector(HelloWorld::upDateScene),0.4);
-	auto map_sequence=new MapSequence("map1.xml");
-	controller.insertMapSequence(map_sequence); 
+	schedule(schedule_selector(HelloWorld::upDateScene));
+	auto map_sequence=new MapSequence();
+	controller.insertMapSequence(map_sequence);   
+    controller.preGenerate(this);
+    auto widget = cocostudio::GUIReader::getInstance()->widgetFromJsonFile("HUD/HUD.json");
+    gold_text = (cocos2d::ui::TextAtlas *)widget->getChildByName("gold");
+    gold_text->setStringValue("0");
+    this->addChild(widget);
     return true;
 }
 
@@ -91,7 +97,7 @@ bool HelloWorld::init()
 
 void HelloWorld::upDateScene(float dt)
 {
-	controller.randomGenerate(player,this);
+	controller.randomGenerate(player,this,dt);
 }
 
 
@@ -155,4 +161,37 @@ void HelloWorld::onTouchEnded(Touch *touch, Event *unused_event)
 			CCLOG("down");
 		}
 	}
+}
+
+void HelloWorld::earnGold()
+{
+    this->gold++;
+    char str[100];
+    sprintf(str,"%d",gold);
+    gold_text->setStringValue(str);
+}
+
+void HelloWorld::hitPlayer() 
+{
+    auto widget = cocostudio::GUIReader::getInstance()->widgetFromJsonFile("Menu/Menu.json");
+    this->addChild(widget);
+    auto restart_btn = (cocos2d::ui::Button *)widget->getChildByName("restart");
+    restart_btn->addTouchEventListener([&](Ref* sender, cocos2d::ui::Widget::TouchEventType type) {  
+        if (type == cocos2d::ui::Widget::TouchEventType::ENDED) {  
+              CCLOG("hehe cao ni ma");
+              Director::getInstance()->replaceScene(HelloWorld::createScene());
+        }  
+    }); 
+    this->pauseSchedulerAndActions();
+    this->_actionManager->removeAllActions();
+    this->player->getPlayer()->stopAllActions();
+    //this->getParent()->pause();
+}
+
+void HelloWorld::onRestartTouch(cocos2d::ui::TouchEventType event)
+{
+    if ( event == ui::TOUCH_EVENT_ENDED )
+    {
+        CCLOG("hehe cao ni ma");
+    }
 }

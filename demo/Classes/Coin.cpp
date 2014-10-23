@@ -1,13 +1,13 @@
 #include "Coin.h"
 #include "CoinAction.h"
 USING_NS_CC;
-Coin::Coin(Player * player)
+Coin::Coin(Player * player,Node * render_node)
 {
 	this->player=player;
 	this->sprite =Sprite3D::create("coin.c3b");
 	this->sprite->setRotation3D(Vec3(-90,0,90));
 	this->sprite->setScale(0.3);
-	auto action = new CoinAction(this->player);
+	auto action = new CoinAction(this->player,render_node);
 	sprite->runAction(action)  
 		; 
 }

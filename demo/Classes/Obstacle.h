@@ -6,7 +6,7 @@ class Obstacle : public cocos2d::Sprite3D{
 	public :
 		Obstacle();
 		void initByFile(const char * file_name);
-		void initDefault(Player * player);
+		void initDefault(Player * player,cocos2d::Node * render_node);
 		cocos2d::Sprite3D * getSprite();
 		void bindTo(cocos2d::Node * render_node);
 		void setLength(int new_length);

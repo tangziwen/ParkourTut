@@ -5,8 +5,11 @@
 #include "PG_Controller.h"
 #include "Player.h"
 #include "DrawNode3D.h"
+#include "ui/UIButton.h"
+#include "ui/UITextAtlas.h"
 class HelloWorld : public cocos2d::Layer
 {
+    
 public:
     // there's no 'id' in cpp, so we recommend returning the class instance pointer
     static cocos2d::Scene* createScene();
@@ -28,13 +31,20 @@ public:
     CREATE_FUNC(HelloWorld);
 
 	static cocos2d::DrawNode3D * drawnode;
+    void earnGold();
+    void hitPlayer();
+    void onRestartTouch(cocos2d::ui::TouchEventType event);
 private:
+    
+    friend class ObstacleAction;
+    friend class CoinAction;
+    int gold;
 	Player * player;
 	cocos2d::Vec2 touch_begin_pos;
 	cocos2d::Vec2 touch_end_pos;
 	cocos2d::Camera * the_camera;
 	PG_Controller controller;
-	
+	cocos2d::ui::TextAtlas * gold_text;
 };
 
 #endif // __HELLOWORLD_SCENE_H__
