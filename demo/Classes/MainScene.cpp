@@ -1,4 +1,4 @@
-#include "HelloWorldScene.h"
+#include "MainScene.h"
 
 USING_NS_CC;
 #include <functional>

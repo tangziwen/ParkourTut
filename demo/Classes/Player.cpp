@@ -11,7 +11,7 @@ Player::Player()
 	player->runAction(RepeatForever::create (animate));
 }
 
-cocos2d::Sprite3D * Player::getPlayer()
+cocos2d::Sprite3D * Player::getPlayer() 
 {
 	return player;  
 }

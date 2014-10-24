@@ -1,5 +1,5 @@
 #include "CoinAction.h"
-#include "HelloWorldScene.h"
+#include "MainScene.h"
 #include "Effect.h"
 USING_NS_CC;
 bool CoinAction::isDone() const

@@ -16,7 +16,6 @@
       <Filter>win32</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\AppDelegate.cpp" />
-    <ClCompile Include="..\Classes\HelloWorldScene.cpp" />
     <ClCompile Include="..\Classes\Obstacle.cpp" />
     <ClCompile Include="..\Classes\CCMoveBy3D.cpp" />
     <ClCompile Include="..\Classes\DemoUtility.cpp" />
@@ -27,15 +26,16 @@
     <ClCompile Include="..\Classes\PG_Controller.cpp" />
     <ClCompile Include="..\Classes\CoinAction.cpp" />
     <ClCompile Include="..\Classes\Player.cpp" />
-    <ClCompile Include="..\Classes\DrawNode3D.cpp" />
     <ClCompile Include="..\Classes\GroundAction.cpp" />
+    <ClCompile Include="..\Classes\Effect.cpp" />
+    <ClCompile Include="..\Classes\PlayerInputController.cpp" />
+    <ClCompile Include="..\Classes\MainScene.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.h">
       <Filter>win32</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\AppDelegate.h" />
-    <ClInclude Include="..\Classes\HelloWorldScene.h" />
     <ClInclude Include="..\Classes\Obstacle.h" />
     <ClInclude Include="..\Classes\PG_Controller.h" />
     <ClInclude Include="..\Classes\CCMoveBy3D.h" />
@@ -46,8 +46,10 @@
     <ClInclude Include="..\Classes\Coin.h" />
     <ClInclude Include="..\Classes\CoinAction.h" />
     <ClInclude Include="..\Classes\Player.h" />
-    <ClInclude Include="..\Classes\DrawNode3D.h" />
     <ClInclude Include="..\Classes\GroundAction.h" />
+    <ClInclude Include="..\Classes\Effect.h" />
+    <ClInclude Include="..\Classes\PlayerInputController.h" />
+    <ClInclude Include="..\Classes\MainScene.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="game.rc">

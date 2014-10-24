@@ -16,7 +16,7 @@ void Obstacle::initByFile(const char * file_name)
 void Obstacle::initDefault(Player * player,Node * render_node)
 {
 	this->obstacle_sprite = Sprite3D::create("model/piglet.c3b");
-    obstacle_sprite->setTexture("zhu0928.jpg");
+    obstacle_sprite->setTexture("model/zhu0928.jpg");
 	obstacle_sprite->retain();
 	obstacle_sprite->setZOrder(100);
 	obstacle_sprite->setScale(0.1);
