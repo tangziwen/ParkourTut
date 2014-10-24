@@ -14,7 +14,7 @@ void ObstacleAction::step(float time)
 {
 	if(_target)
 	{
-		_target->setPosition3D (DemoUtility::translateRelative(_target->getPosition3D(),_target->getRotation3D(),Vec3(0,0,100*time)));
+		_target->setPosition3D (DemoUtility::translateRelative(_target->getPosition3D(),_target->getRotation3D(),Vec3(0,0,150*time)));
 		if(_target->getPositionZ()>-40 && _target->getPositionZ()<10 )// enter the front
 		{
 			 Sprite3D * sprite = dynamic_cast<Sprite3D * >(_target);
@@ -29,11 +29,11 @@ void ObstacleAction::step(float time)
 				 CCLOG("hit");
 			 }
              */
-             auto dist =sprite->getPosition3D().distance(player->getPlayer()->getPosition3D());
-             if(dist<10)
+             auto dist =Vec3(sprite->getPositionX(),0,sprite->getPositionZ()).distance(player->getPlayer()->getPosition3D());
+             if(dist<5)
              {
                  _target->setVisible(false);
-                 auto a = (HelloWorld * )this->render_node;
+                 auto a = (GameScene * )this->render_node;
                  a->hitPlayer();
                  _target->setScale(2);
                  CCLOG("HIT !!!");

@@ -7,7 +7,8 @@
 #include "DrawNode3D.h"
 #include "ui/UIButton.h"
 #include "ui/UITextAtlas.h"
-class HelloWorld : public cocos2d::Layer
+#include "PlayerInputController.h"
+class GameScene : public cocos2d::Layer
 {
     
 public:
@@ -23,27 +24,24 @@ public:
 	//virtual void onEnter();
 
 	void upDateScene(float dt);
-
-    // a selector callback
-    void menuCloseCallback(cocos2d::Ref* pSender);
     
     // implement the "static create()" method manually
-    CREATE_FUNC(HelloWorld);
+    CREATE_FUNC(GameScene);
 
 	static cocos2d::DrawNode3D * drawnode;
     void earnGold();
     void hitPlayer();
-    void onRestartTouch(cocos2d::ui::TouchEventType event);
 private:
     
     friend class ObstacleAction;
     friend class CoinAction;
-    int gold;
+    int current_gold;
+    PlayerInputController * input_controller;
 	Player * player;
 	cocos2d::Vec2 touch_begin_pos;
 	cocos2d::Vec2 touch_end_pos;
 	cocos2d::Camera * the_camera;
-	PG_Controller controller;
+	PG_Controller pg_controller;
 	cocos2d::ui::TextAtlas * gold_text;
 };
 

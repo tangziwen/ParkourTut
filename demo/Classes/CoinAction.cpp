@@ -1,5 +1,6 @@
 #include "CoinAction.h"
 #include "HelloWorldScene.h"
+#include "Effect.h"
 USING_NS_CC;
 bool CoinAction::isDone() const
 {
@@ -19,23 +20,15 @@ void CoinAction::step(float time)
 			Vec3 vertices[8];
 
 			auto player_aabb= player->getPlayer()->getAABB();
-            /*
-			if(sprite->getAABB().intersects(player_aabb))
-			{
-				sprite->setVisible(false);
-                auto a = (HelloWorld * )this->render_node;
-                a->gold_text->setString("100");
-				CCLOG("get Money !!!");
-			}*/
             auto dist =sprite->getPosition3D().distance(player->getPlayer()->getPosition3D());
-            if(dist<5)
+            if(dist<5 && !is_triggered)
             {
-                _target->setVisible(false);
-                auto a = (HelloWorld * )this->render_node;
+                is_triggered =~is_triggered;
+                sprite->setColor(Color3B(255,0,0));
+                Effect::CoinEffect(render_node);
+                auto a = (GameScene * )this->render_node;
                 a->earnGold();
                 CCLOG("get Money !!!");
-                _target->removeFromParent();
-                _target=nullptr;
                 return ;
             }
 		}
@@ -47,12 +40,12 @@ void CoinAction::step(float time)
 	}
 }
 
-CoinAction::CoinAction():player(NULL),angle(0),render_node(NULL)
+CoinAction::CoinAction():player(NULL),angle(0),render_node(NULL),is_triggered(false)
 {
 
 }
 
-CoinAction::CoinAction(Player * player,cocos2d::Node * node):angle(0)
+CoinAction::CoinAction(Player * player,cocos2d::Node * node):angle(0),is_triggered(false)
 {
 	this->player=player;
     this->render_node = node;

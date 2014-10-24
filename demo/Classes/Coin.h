@@ -2,6 +2,9 @@
 #define COIN_H 
 #include "Player.h"
 #include "cocos2d.h"
+
+
+//the coin that player can pick
 class Coin{
 public:
 	Coin(Player * player,cocos2d::Node * render_node);

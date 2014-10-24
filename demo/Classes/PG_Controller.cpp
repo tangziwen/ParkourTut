@@ -36,7 +36,7 @@ void PG_Controller::randomGenerate(Player * player,cocos2d::Node * render_node,f
         generateObstacle(player,render_node);
         obstacle_step=0;
     }
-	if(step >= 3.8)
+	if(step >= 3.87)
 	{
 		generateScene(player,render_node);
 		step=0;  
@@ -45,7 +45,7 @@ void PG_Controller::randomGenerate(Player * player,cocos2d::Node * render_node,f
 
 void PG_Controller::generateScene(Player * player,cocos2d::Node * render_node)
 {
-	auto sprite_left =cocos2d::Sprite3D::create("scene.c3b");  
+	auto sprite_left =cocos2d::Sprite3D::create("model/scene.c3b");  
 	sprite_left->setScale(0.2); 
     sprite_left->setRotation3D(Vec3(0,90,0));
 	render_node->addChild(sprite_left,10); 
@@ -175,16 +175,16 @@ void PG_Controller::generateGround(cocos2d::Node * render_node)
 
 void PG_Controller::preGenerate(cocos2d::Node * render_node)
 {
-    auto scene_1 =cocos2d::Sprite3D::create("scene.c3b");  
+    auto scene_1 =cocos2d::Sprite3D::create("model/scene.c3b");  
     scene_1->setScale(0.2); 
     scene_1->setRotation3D(Vec3(0,90,0));
     render_node->addChild(scene_1,10); 
     auto action_1 = new DecorationAction();
-    scene_1->setPosition3D(Vec3(0,-5,-100));  
+    scene_1->setPosition3D(Vec3(0,-5,0));  
     scene_1->runAction(action_1); 
     render_node->setCameraMask(2);
 
-    auto scene_2 =cocos2d::Sprite3D::create("scene.c3b");  
+    auto scene_2 =cocos2d::Sprite3D::create("model/scene.c3b");  
     scene_2->setScale(0.2); 
     scene_2->setRotation3D(Vec3(0,90,0));
     render_node->addChild(scene_2,10); 

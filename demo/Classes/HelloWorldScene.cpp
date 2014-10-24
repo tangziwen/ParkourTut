@@ -9,9 +9,7 @@ USING_NS_CC;
 
 
 
-
-cocos2d::DrawNode3D * HelloWorld::drawnode=nullptr;
-Scene* HelloWorld::createScene()
+Scene* GameScene::createScene()
 {
     // 'scene' is an autorelease object
     auto scene = Scene::create();
@@ -21,20 +19,17 @@ Scene* HelloWorld::createScene()
 	auto bg_layer= Layer::create();
 	scene->addChild(camera_1);
 
-
-
-	scene->addChild(bg_layer,-100,"back ground");
-	auto the_background= Sprite::create("back_ground.jpg");
-	the_background->setName("back ground!!!!");
+	scene->addChild(bg_layer,-100,"model/back ground");
+	auto the_background= Sprite::create("model/back_ground.jpg");
 	the_background->setAnchorPoint(Vec2(0,0));
 	bg_layer->addChild(the_background);
 	bg_layer->setCameraMask(4);
 
     // 'layer' is an autorelease object
-    auto layer = HelloWorld::create();
+    auto layer = GameScene::create();
 
     // add layer as a child to scene
-    
+   
 	scene->addChild(layer,100,"game main");
     // return the scene
     return scene;
@@ -43,7 +38,7 @@ Scene* HelloWorld::createScene()
 
 
 // on "init" you need to initialize your instance
-bool HelloWorld::init()
+bool GameScene::init()
 {
 
     //////////////////////////////
@@ -52,14 +47,14 @@ bool HelloWorld::init()
     {  
         return false;
     }
-	this->gold=0;
+	this->current_gold=0;
 	player =new Player();
 
 	this->addChild(player->getPlayer(),10);
 	
     player->getPlayer()->setPosition3D(Vec3(0,0,-40));
 	
-	
+	input_controller = new PlayerInputController(player);
 	auto s = Director::getInstance()->getWinSize();
 	auto camera =Camera::createPerspective(60, (GLfloat)s.width/s.height, 1, 200);
 	camera->setCameraFlag(CameraFlag::USER1);
@@ -68,25 +63,37 @@ bool HelloWorld::init()
     this->addChild(camera);
 
 
-	drawnode=DrawNode3D::create();
-	this->addChild(drawnode);
-	
 
 	CCLOG("%f %f %f",camera->getPosition3D().x,camera->getPosition3D().y,camera->getPosition3D().z);
 	this->setCameraMask((unsigned short )CameraFlag::USER1);
 	
 
 	auto touchListener = EventListenerTouchOneByOne::create();
-	touchListener->onTouchBegan=CC_CALLBACK_2(HelloWorld::onTouchBegan,this);
-	touchListener->onTouchEnded=CC_CALLBACK_2(HelloWorld::onTouchEnded,this);
+	touchListener->onTouchBegan=CC_CALLBACK_2(GameScene::onTouchBegan,this);
+	touchListener->onTouchEnded=CC_CALLBACK_2(GameScene::onTouchEnded,this);
 
 	_eventDispatcher->addEventListenerWithSceneGraphPriority(touchListener,this);
 
-	schedule(schedule_selector(HelloWorld::upDateScene));
+	schedule(schedule_selector(GameScene::upDateScene));
 	auto map_sequence=new MapSequence();
-	controller.insertMapSequence(map_sequence);   
-    controller.preGenerate(this);
+	pg_controller.insertMapSequence(map_sequence);   
+    pg_controller.preGenerate(this);
     auto widget = cocostudio::GUIReader::getInstance()->widgetFromJsonFile("HUD/HUD.json");
+    auto pause_button=(cocos2d::ui::Button *)widget->getChildByName("Button_1");
+    pause_button->addTouchEventListener([&](Ref* sender, cocos2d::ui::Widget::TouchEventType type) {
+        static bool is_pause = false;
+        if (type == cocos2d::ui::Widget::TouchEventType::ENDED) {  
+            if(!is_pause){
+                Director::getInstance()->pause();
+                is_pause = true;
+            }else
+            {
+                is_pause = false;
+                Director::getInstance()->resume();
+            }
+
+        }  
+    }); 
     gold_text = (cocos2d::ui::TextAtlas *)widget->getChildByName("gold");
     gold_text->setStringValue("0");
     this->addChild(widget);
@@ -95,103 +102,42 @@ bool HelloWorld::init()
 
 
 
-void HelloWorld::upDateScene(float dt)
+void GameScene::upDateScene(float dt)
 {
-	controller.randomGenerate(player,this,dt);
+	pg_controller.randomGenerate(player,this,dt);
 }
 
 
-void HelloWorld::menuCloseCallback(Ref* pSender)
+bool GameScene::onTouchBegan(Touch *touch, Event *unused_event)
 {
-#if (CC_TARGET_PLATFORM == CC_PLATFORM_WP8) || (CC_TARGET_PLATFORM == CC_PLATFORM_WINRT)
-	MessageBox("You pressed the close button. Windows Store Apps do not implement a close button.","Alert");
-    return;
-#endif
-	 
-    Director::getInstance()->end();
-
-#if (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
-    exit(0);
-#endif
-}
-
-bool HelloWorld::onTouchBegan(Touch *touch, Event *unused_event)
-{
-	this->touch_begin_pos=std::move(touch->getLocation());
+    input_controller->receiveTouchBegin(touch->getLocation());
 	return true;
 }
 
-void HelloWorld::onTouchEnded(Touch *touch, Event *unused_event)
+void GameScene::onTouchEnded(Touch *touch, Event *unused_event)
 {
-	this->touch_end_pos=std::move(touch->getLocation());
-
-	Vec2 diff =touch_end_pos-touch_begin_pos;
-	diff.normalize();
-	auto a =std::move(Vec2(1,0));//horizontal line
-	auto result =Vec2::dot(diff,a);
-	const int TURN_LEFT=1;
-	const int TURN_RIGHT=2;
-	if(abs(result)>0.7)// left or right 
-	{
-		if(result>0)//right
-		{
-			if(player->getPlayer()->getPositionX()<10 && !player->getPlayer()->getActionByTag(TURN_RIGHT) && !player->getPlayer()->getActionByTag(TURN_LEFT))
-			{
-				auto action = MoveBy3D::create(0.2,Vec3(10,0,0),false);
-				action->setTag(TURN_RIGHT);
-				this->player->getPlayer()->runAction(action);
-			}
-			CCLOG("right");
-		}else //left
-		{
-			if(player->getPlayer()->getPositionX()>-10 && !player->getPlayer()->getActionByTag(TURN_RIGHT) && !player->getPlayer()->getActionByTag(TURN_LEFT))
-			{
-				auto action = MoveBy3D::create(0.2,Vec3(-10,0,0),false);
-				action->setTag(TURN_LEFT);
-				this->player->getPlayer()->runAction(action);
-			}
-			CCLOG("left");
-		}
-	}else{  //up or down 
-		if(diff.y>0)
-		{
-			CCLOG("up");
-		}else
-		{
-			CCLOG("down");
-		}
-	}
+    input_controller->receiveTouchEnd(touch->getLocation());
 }
 
-void HelloWorld::earnGold()
+void GameScene::earnGold()
 {
-    this->gold++;
+    this->current_gold++;
     char str[100];
-    sprintf(str,"%d",gold);
+    sprintf(str,"%d",current_gold);
     gold_text->setStringValue(str);
 }
 
-void HelloWorld::hitPlayer() 
+void GameScene::hitPlayer() 
 {
     auto widget = cocostudio::GUIReader::getInstance()->widgetFromJsonFile("Menu/Menu.json");
     this->addChild(widget);
     auto restart_btn = (cocos2d::ui::Button *)widget->getChildByName("restart");
     restart_btn->addTouchEventListener([&](Ref* sender, cocos2d::ui::Widget::TouchEventType type) {  
         if (type == cocos2d::ui::Widget::TouchEventType::ENDED) {  
-              CCLOG("hehe cao ni ma");
-              Director::getInstance()->replaceScene(HelloWorld::createScene());
+              Director::getInstance()->replaceScene(GameScene::createScene());
         }  
     }); 
     this->pauseSchedulerAndActions();
     this->_actionManager->removeAllActions();
     this->player->getPlayer()->stopAllActions();
-    //this->getParent()->pause();
-}
-
-void HelloWorld::onRestartTouch(cocos2d::ui::TouchEventType event)
-{
-    if ( event == ui::TOUCH_EVENT_ENDED )
-    {
-        CCLOG("hehe cao ni ma");
-    }
 }
