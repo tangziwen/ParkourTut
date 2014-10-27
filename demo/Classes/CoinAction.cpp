@@ -18,7 +18,6 @@ void CoinAction::step(float time)
 		{
 			Sprite3D * sprite = dynamic_cast<Sprite3D * >(_target);
 			Vec3 vertices[8];
-
 			auto player_aabb= player->getPlayer()->getAABB();
             auto dist =sprite->getPosition3D().distance(player->getPlayer()->getPosition3D());
             if(dist<5 && !is_triggered)
