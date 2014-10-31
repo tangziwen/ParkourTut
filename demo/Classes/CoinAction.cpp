@@ -16,7 +16,10 @@ void CoinAction::step(float time)
 		_target->setPosition3D (_target->getPosition3D()+Vec3(0,0,100*time));
 		if(_target->getPositionZ()>-40 && _target->getPositionZ()<10 )// enter the front
 		{
+            
 			Sprite3D * sprite = dynamic_cast<Sprite3D * >(_target);
+            OBB obb(sprite->getAABB());
+      
 			Vec3 vertices[8];
 			auto player_aabb= player->getPlayer()->getAABB();
             auto dist =sprite->getPosition3D().distance(player->getPlayer()->getPosition3D());
